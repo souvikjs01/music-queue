@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package music;
+
+option go_package = "./";
+
+service MusicQueueService {
+    rpc AddSong(AddSongRequest) returns (AddSongResponse);
+    rpc GetQueue(Empty) returns (SongQueueResponse);
+    rpc UpvoteSong(UpvoteRequest) returns (UpvoteResponse);
+}
+
+message AddSongRequest {
+    string title = 1;
+    string artist = 2;
+}
+
+message AddSongResponse {
+    string message = 1;
+}
+
+message Empty {}
+
+message Song {
+    int32 id = 1;
+    string title = 2;
+    string artist = 3;
+    int32 upvotes = 4;
+}
+
+message SongQueueResponse {
+    repeated Song songs = 1;
+}
+
+message UpvoteRequest {
+    int32 songId = 1;
+}
+
+message UpvoteResponse {
+    string message = 1;
+}

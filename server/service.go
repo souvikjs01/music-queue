@@ -1,67 +1,25 @@
 package server
 
 import (
-	"context"
-	"music-queue/models"
+	"log"
 	proto "music-queue/protoc"
+	"net"
+
+	"google.golang.org/grpc"
 )
 
-type MusicQueueServiceServer struct {
-	proto.UnimplementedMusicQueueServiceServer
-}
-
-func NewMusicQueueServiceServer() *MusicQueueServiceServer {
-	return &MusicQueueServiceServer{}
-}
-
-func (s *MusicQueueServiceServer) AddSong(ctx context.Context, req *proto.AddSongRequest) (*proto.AddSongResponse, error) {
-	song := models.Song{
-		Title:   req.GetTitle(),
-		Artist:  req.GetArtist(),
-		Upvotes: 0,
-	}
-	if err := DB.Create(&song).Error; err != nil {
-		return nil, err
+func StartGrpcServer() {
+	listener, err := net.Listen("tcp", ":8000")
+	if err != nil {
+		log.Fatalf("Failed to listen: %v", err)
 	}
 
-	return &proto.AddSongResponse{Message: "Song added successfully"}, nil
-}
+	grpcServer := grpc.NewServer()
+	musicService := NewMusicQueueServiceServer()
 
-func (s *MusicQueueServiceServer) GetQueue(ctx context.Context, req *proto.Empty) (*proto.SongQueueResponse, error) {
-	var songs []models.Song
-
-	if err := DB.Order("upvotes DESC").Find(&songs).Error; err != nil {
-		return nil, err
+	proto.RegisterMusicQueueServiceServer(grpcServer, musicService)
+	log.Println("gRPC server is running on the port 8000")
+	if err := grpcServer.Serve(listener); err != nil {
+		log.Fatalf("Failed to serve: %v", err)
 	}
-
-	var protoSongs []*proto.Song
-
-	for _, song := range songs {
-		protoSongs = append(protoSongs, &proto.Song{
-			Id:      int32(song.ID),
-			Title:   song.Title,
-			Artist:  song.Artist,
-			Upvotes: int32(song.Upvotes),
-		})
-	}
-
-	return &proto.SongQueueResponse{
-		Songs: protoSongs,
-	}, nil
-}
-
-func (s *MusicQueueServiceServer) UpvoteSong(ctx context.Context, req *proto.UpvoteRequest) (*proto.UpvoteResponse, error) {
-	var song models.Song
-	if err := DB.First(&song, req.GetSongId()).Error; err != nil {
-		return nil, err
-	}
-
-	song.Upvotes += 1
-	if err := DB.Save(&song).Error; err != nil {
-		return nil, err
-	}
-
-	return &proto.UpvoteResponse{
-		Message: "Upvoted successfully",
-	}, nil
 }

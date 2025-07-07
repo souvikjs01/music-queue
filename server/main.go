@@ -1,9 +1,8 @@
-package main
+package server
 
 import (
 	"log"
 	"music-queue/config"
-	"music-queue/server"
 	"net"
 
 	proto "music-queue/protoc"
@@ -14,7 +13,7 @@ import (
 func main() {
 	config.LoadEnv()
 	dbUrl := config.Getenv("DATABASE_URL")
-	server.ConnectDB(dbUrl)
+	ConnectDB(dbUrl)
 
 	// start grpc server
 	lis, err := net.Listen("tcp", ":8091")
@@ -23,7 +22,7 @@ func main() {
 	}
 
 	grpcServer := grpc.NewServer()
-	musicServer := server.NewMusicQueueServiceServer()
+	musicServer := NewMusicQueueServiceServer()
 
 	proto.RegisterMusicQueueServiceServer(grpcServer, musicServer)
 

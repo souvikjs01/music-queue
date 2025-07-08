@@ -2,8 +2,7 @@ package main
 
 import (
 	"log"
-	"music-queue/api"
-	"music-queue/client"
+	client "music-queue/client/grpc_client"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,11 +14,11 @@ func main() {
 	router := gin.Default()
 
 	// Admin Routes
-	router.POST("/admin/songs", api.AddSong)
+	router.POST("/admin/songs", client.AddSong)
 
 	// User Routes
-	router.GET("/songs", api.GetQueue)
-	router.POST("/songs/:id/upvote", api.UpvoteSong)
+	router.GET("/songs", client.GetQueue)
+	router.POST("/songs/:id/upvote", client.UpvoteSong)
 
 	log.Println("API Gateway running on port 8080")
 	router.Run(":8080")

@@ -1,8 +1,7 @@
-package api
+package client
 
 import (
 	"context"
-	"music-queue/client"
 	proto "music-queue/protoc"
 	"net/http"
 	"strconv"
@@ -28,7 +27,7 @@ func AddSong(c *gin.Context) {
 		Artist: req.Artist,
 	}
 
-	res, err := client.Client.AddSong(context.Background(), grpcReq)
+	res, err := Client.AddSong(context.Background(), grpcReq)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -43,7 +42,7 @@ func AddSong(c *gin.Context) {
 }
 
 func GetQueue(c *gin.Context) {
-	res, err := client.Client.GetQueue(context.Background(), &proto.Empty{})
+	res, err := Client.GetQueue(context.Background(), &proto.Empty{})
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -70,7 +69,7 @@ func UpvoteSong(c *gin.Context) {
 		SongId: int32(songID),
 	}
 
-	res, err := client.Client.UpvoteSong(context.Background(), grpcReq)
+	res, err := Client.UpvoteSong(context.Background(), grpcReq)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),

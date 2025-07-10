@@ -67,3 +67,17 @@ func (s *MusicQueueServiceServer) UpvoteSong(ctx context.Context, req *proto.Upv
 		Message: "Upvoted successfully",
 	}, nil
 }
+
+func (s *MusicQueueServiceServer) DeleteSong(ctx context.Context, req *proto.DeleteSongRequest) (*proto.DeleteSongResponse, error) {
+	songId := req.GetSongId()
+
+	var song models.Song
+	if err := DB.Delete(&song, songId).Error; err != nil {
+		return nil, err
+	}
+
+	return &proto.DeleteSongResponse{
+		Message: "Song deleted successfully",
+	}, nil
+
+}

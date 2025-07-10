@@ -22,6 +22,7 @@ const (
 	MusicQueueService_AddSong_FullMethodName    = "/music.MusicQueueService/AddSong"
 	MusicQueueService_GetQueue_FullMethodName   = "/music.MusicQueueService/GetQueue"
 	MusicQueueService_UpvoteSong_FullMethodName = "/music.MusicQueueService/UpvoteSong"
+	MusicQueueService_DeleteSong_FullMethodName = "/music.MusicQueueService/DeleteSong"
 )
 
 // MusicQueueServiceClient is the client API for MusicQueueService service.
@@ -31,6 +32,7 @@ type MusicQueueServiceClient interface {
 	AddSong(ctx context.Context, in *AddSongRequest, opts ...grpc.CallOption) (*AddSongResponse, error)
 	GetQueue(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*SongQueueResponse, error)
 	UpvoteSong(ctx context.Context, in *UpvoteRequest, opts ...grpc.CallOption) (*UpvoteResponse, error)
+	DeleteSong(ctx context.Context, in *DeleteSongRequest, opts ...grpc.CallOption) (*DeleteSongResponse, error)
 }
 
 type musicQueueServiceClient struct {
@@ -71,6 +73,16 @@ func (c *musicQueueServiceClient) UpvoteSong(ctx context.Context, in *UpvoteRequ
 	return out, nil
 }
 
+func (c *musicQueueServiceClient) DeleteSong(ctx context.Context, in *DeleteSongRequest, opts ...grpc.CallOption) (*DeleteSongResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteSongResponse)
+	err := c.cc.Invoke(ctx, MusicQueueService_DeleteSong_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MusicQueueServiceServer is the server API for MusicQueueService service.
 // All implementations must embed UnimplementedMusicQueueServiceServer
 // for forward compatibility.
@@ -78,6 +90,7 @@ type MusicQueueServiceServer interface {
 	AddSong(context.Context, *AddSongRequest) (*AddSongResponse, error)
 	GetQueue(context.Context, *Empty) (*SongQueueResponse, error)
 	UpvoteSong(context.Context, *UpvoteRequest) (*UpvoteResponse, error)
+	DeleteSong(context.Context, *DeleteSongRequest) (*DeleteSongResponse, error)
 	mustEmbedUnimplementedMusicQueueServiceServer()
 }
 
@@ -96,6 +109,9 @@ func (UnimplementedMusicQueueServiceServer) GetQueue(context.Context, *Empty) (*
 }
 func (UnimplementedMusicQueueServiceServer) UpvoteSong(context.Context, *UpvoteRequest) (*UpvoteResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpvoteSong not implemented")
+}
+func (UnimplementedMusicQueueServiceServer) DeleteSong(context.Context, *DeleteSongRequest) (*DeleteSongResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteSong not implemented")
 }
 func (UnimplementedMusicQueueServiceServer) mustEmbedUnimplementedMusicQueueServiceServer() {}
 func (UnimplementedMusicQueueServiceServer) testEmbeddedByValue()                           {}
@@ -172,6 +188,24 @@ func _MusicQueueService_UpvoteSong_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MusicQueueService_DeleteSong_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteSongRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MusicQueueServiceServer).DeleteSong(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MusicQueueService_DeleteSong_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MusicQueueServiceServer).DeleteSong(ctx, req.(*DeleteSongRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // MusicQueueService_ServiceDesc is the grpc.ServiceDesc for MusicQueueService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -190,6 +224,10 @@ var MusicQueueService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpvoteSong",
 			Handler:    _MusicQueueService_UpvoteSong_Handler,
+		},
+		{
+			MethodName: "DeleteSong",
+			Handler:    _MusicQueueService_DeleteSong_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

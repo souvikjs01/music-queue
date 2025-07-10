@@ -83,3 +83,22 @@ func UpvoteSong(c *gin.Context) {
 		"message": res.GetMessage(),
 	})
 }
+
+func DeleteSong(c *gin.Context) {
+	idParam := c.Param("id")
+	songID, err := strconv.Atoi(idParam)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid song ID"})
+		return
+	}
+	grpcReq := &proto.DeleteSongRequest{SongId: int32(songID)}
+
+	res, err := Client.DeleteSong(context.Background(), grpcReq)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": res.GetMessage()})
+}

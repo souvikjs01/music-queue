@@ -8,6 +8,15 @@ service MusicQueueService {
     rpc AddSong(AddSongRequest) returns (AddSongResponse);
     rpc GetQueue(Empty) returns (SongQueueResponse);
     rpc UpvoteSong(UpvoteRequest) returns (UpvoteResponse);
+    rpc DeleteSong(DeleteSongRequest) returns (DeleteSongResponse);
+}
+
+message DeleteSongRequest {
+    int32 songId = 1;
+}
+
+message DeleteSongResponse {
+    string message = 1;
 }
 
 message AddSongRequest {

@@ -22,6 +22,7 @@ func main() {
 	// User Routes
 	router.GET("/songs", client.GetQueue)
 	router.POST("/songs/:id/upvote", client.UpvoteSong)
+	router.DELETE("/songs/remove/:id", client.DeleteSong)
 
 	log.Println("API Gateway running on port 8080")
 	router.Run(":8080")

@@ -11,8 +11,9 @@ import (
 
 func AddSong(c *gin.Context) {
 	var req struct {
-		Title  string `json:"title"`
-		Artist string `json:"artist"`
+		Title      string `json:"title"`
+		Artist     string `json:"artist"`
+		YoutubeUrl string `json:"youtube_url"`
 	}
 
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -23,8 +24,9 @@ func AddSong(c *gin.Context) {
 	}
 
 	grpcReq := &proto.AddSongRequest{
-		Title:  req.Title,
-		Artist: req.Artist,
+		Title:      req.Title,
+		Artist:     req.Artist,
+		YoutubeUrl: req.YoutubeUrl,
 	}
 
 	res, err := Client.AddSong(context.Background(), grpcReq)

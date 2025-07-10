@@ -16,9 +16,10 @@ func NewMusicQueueServiceServer() *MusicQueueServiceServer {
 
 func (s *MusicQueueServiceServer) AddSong(ctx context.Context, req *proto.AddSongRequest) (*proto.AddSongResponse, error) {
 	song := models.Song{
-		Title:   req.GetTitle(),
-		Artist:  req.GetArtist(),
-		Upvotes: 0,
+		Title:      req.GetTitle(),
+		Artist:     req.GetArtist(),
+		Upvotes:    0,
+		YoutubeURL: req.YoutubeUrl,
 	}
 	if err := DB.Create(&song).Error; err != nil {
 		return nil, err
@@ -38,10 +39,11 @@ func (s *MusicQueueServiceServer) GetQueue(ctx context.Context, req *proto.Empty
 
 	for _, song := range songs {
 		protoSongs = append(protoSongs, &proto.Song{
-			Id:      int32(song.ID),
-			Title:   song.Title,
-			Artist:  song.Artist,
-			Upvotes: int32(song.Upvotes),
+			Id:         int32(song.ID),
+			Title:      song.Title,
+			Artist:     song.Artist,
+			Upvotes:    int32(song.Upvotes),
+			YoutubeUrl: song.YoutubeURL,
 		})
 	}
 

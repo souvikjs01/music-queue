@@ -25,6 +25,7 @@ type AddSongRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Title         string                 `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
 	Artist        string                 `protobuf:"bytes,2,opt,name=artist,proto3" json:"artist,omitempty"`
+	YoutubeUrl    string                 `protobuf:"bytes,3,opt,name=youtube_url,json=youtubeUrl,proto3" json:"youtube_url,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -69,6 +70,13 @@ func (x *AddSongRequest) GetTitle() string {
 func (x *AddSongRequest) GetArtist() string {
 	if x != nil {
 		return x.Artist
+	}
+	return ""
+}
+
+func (x *AddSongRequest) GetYoutubeUrl() string {
+	if x != nil {
+		return x.YoutubeUrl
 	}
 	return ""
 }
@@ -159,6 +167,7 @@ type Song struct {
 	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
 	Artist        string                 `protobuf:"bytes,3,opt,name=artist,proto3" json:"artist,omitempty"`
 	Upvotes       int32                  `protobuf:"varint,4,opt,name=upvotes,proto3" json:"upvotes,omitempty"`
+	YoutubeUrl    string                 `protobuf:"bytes,5,opt,name=youtube_url,json=youtubeUrl,proto3" json:"youtube_url,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -219,6 +228,13 @@ func (x *Song) GetUpvotes() int32 {
 		return x.Upvotes
 	}
 	return 0
+}
+
+func (x *Song) GetYoutubeUrl() string {
+	if x != nil {
+		return x.YoutubeUrl
+	}
+	return ""
 }
 
 type SongQueueResponse struct {
@@ -357,18 +373,22 @@ var File_music_proto protoreflect.FileDescriptor
 
 const file_music_proto_rawDesc = "" +
 	"\n" +
-	"\vmusic.proto\x12\x05music\">\n" +
+	"\vmusic.proto\x12\x05music\"_\n" +
 	"\x0eAddSongRequest\x12\x14\n" +
 	"\x05title\x18\x01 \x01(\tR\x05title\x12\x16\n" +
-	"\x06artist\x18\x02 \x01(\tR\x06artist\"+\n" +
+	"\x06artist\x18\x02 \x01(\tR\x06artist\x12\x1f\n" +
+	"\vyoutube_url\x18\x03 \x01(\tR\n" +
+	"youtubeUrl\"+\n" +
 	"\x0fAddSongResponse\x12\x18\n" +
 	"\amessage\x18\x01 \x01(\tR\amessage\"\a\n" +
-	"\x05Empty\"^\n" +
+	"\x05Empty\"\x7f\n" +
 	"\x04Song\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x14\n" +
 	"\x05title\x18\x02 \x01(\tR\x05title\x12\x16\n" +
 	"\x06artist\x18\x03 \x01(\tR\x06artist\x12\x18\n" +
-	"\aupvotes\x18\x04 \x01(\x05R\aupvotes\"6\n" +
+	"\aupvotes\x18\x04 \x01(\x05R\aupvotes\x12\x1f\n" +
+	"\vyoutube_url\x18\x05 \x01(\tR\n" +
+	"youtubeUrl\"6\n" +
 	"\x11SongQueueResponse\x12!\n" +
 	"\x05songs\x18\x01 \x03(\v2\v.music.SongR\x05songs\"'\n" +
 	"\rUpvoteRequest\x12\x16\n" +

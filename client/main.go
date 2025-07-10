@@ -4,6 +4,7 @@ import (
 	"log"
 	client "music-queue/client/grpc_client"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,6 +13,8 @@ func main() {
 	client.InitGrpcClient()
 
 	router := gin.Default()
+
+	router.Use(cors.Default())
 
 	// Admin Routes
 	router.POST("/admin/songs", client.AddSong)
